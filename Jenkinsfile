@@ -6,7 +6,10 @@ pipeline
   {
     stage("Maven packaging")
     {
+      steps
+      {
        sh 'mvn clean package'
+      }
     }
   }
 }
