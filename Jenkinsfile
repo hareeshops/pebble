@@ -4,11 +4,9 @@ pipeline
   agent any
   stages
   {
-    stage("SCM checkout")
+    stage("Maven packaging")
     {
-      steps{
-          echo 'code is built'
-      }
+       sh 'mvn clean package'
     }
   }
 }
