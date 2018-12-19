@@ -11,19 +11,20 @@ pipeline
        sh 'mvn clean package'
       }
     }
-    stage("Declarative:Copy artifacts(war)")
-    {
-      steps
-      {
-       sh */target/pebble-2.6.7-SNAPSHOT.war /tmp/executables 
-      }
+    stage("Declarative:Static code analysis") {
+    environment {
+        scannerHome = tool name: 'Sonar7.4', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
     }
-    stage("Declarative:Static code analysis")
-    {
-      steps
-      {
-       echo 'code executed'
-      }
+
+    steps {
+        withSonarQubeEnv('sonarqube') {
+            sh "${scannerHome}/bin/sonar-scanner"
+        }
+
+        timeout(time: 10, unit: 'MINUTES') {
+            waitForQualityGate abortPipeline: true
+        }
     }
+}
   }
 }
